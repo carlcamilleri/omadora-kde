@@ -5,7 +5,7 @@ browser=$(xdg-settings get default-web-browser 2>/dev/null)
 
 # If no default browser or browser doesn't support --app, try common browsers
 case $browser in
-google-chrome* | brave-browser* | microsoft-edge* | opera* | vivaldi* | chromium*)
+google-chrome* | brave-browser* | com.brave.Browser* | microsoft-edge* | opera* | vivaldi* | chromium*)
   # Browser supports --app mode
   ;;
 *)
