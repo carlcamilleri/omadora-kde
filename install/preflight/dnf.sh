@@ -3,8 +3,8 @@ if [[ -n ${OMADORA_ONLINE_INSTALL:-} ]]; then
   echo "fastestmirror=True" | sudo tee -a /etc/dnf/dnf.conf >/dev/null
   echo "max_parallel_downloads=10" | sudo tee -a /etc/dnf/dnf.conf >/dev/null
 
-  # Install development tools
-  sudo dnf groupinstall -y "Development Tools" "Development Libraries"
+  # Install development tools (dnf5 compatible syntax)
+  sudo dnf group install -y "Development Tools" "Development Libraries"
 
   # Enable RPM Fusion repositories (Free and Nonfree)
   sudo dnf install -y \
