@@ -25,7 +25,7 @@ sudo dnf update -y
 sudo dnf install -y git
 
 # Use custom repo if specified, otherwise default to your repo
-OMADORA_REPO="${OMADORA_REPO:-ccamilleri/omadora-kde}"
+OMADORA_REPO="${OMADORA_REPO:-carlcamilleri/omadora-kde}"
 
 echo -e "\nCloning Omadora KDE from: https://github.com/${OMADORA_REPO}.git"
 rm -rf ~/.local/share/omadora-kde/
