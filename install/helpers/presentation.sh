@@ -1,18 +1,65 @@
-# Ensure we have gum available for UI elements
-if ! command -v gum &>/dev/null; then
-  sudo dnf install -y gum 2>/dev/null || {
-    echo "Warning: gum not available, using basic output"
-    # Create a basic gum stub function for fallback
-    gum() {
-      case "$1" in
-      style) shift; echo "$@" ;;
-      choose) shift; while [[ $# -gt 0 ]]; do [[ "$1" != --* ]] && echo "$1"; shift; done | head -1 ;;
-      *) echo "$@" ;;
-      esac
-    }
-    export -f gum
-  }
-fi
+# Create a gum stub function that works without gum
+gum() {
+  local cmd="$1"
+  shift
+
+  case "$cmd" in
+    style)
+      # Parse style arguments and just output the text
+      local text=""
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+          --foreground|--background|--padding|--border|--align|--width|--height)
+            shift 2  # Skip flag and value
+            ;;
+          --*)
+            shift  # Skip other flags
+            ;;
+          *)
+            text="$1"
+            shift
+            ;;
+        esac
+      done
+      echo "$text"
+      ;;
+    choose)
+      # Extract options (non-flag arguments)
+      local options=()
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+          --header|--height|--padding)
+            shift 2
+            ;;
+          --*)
+            shift
+            ;;
+          *)
+            options+=("$1")
+            shift
+            ;;
+        esac
+      done
+      # Return first option
+      echo "${options[0]}"
+      ;;
+    confirm)
+      # Simple yes/no - default to yes
+      echo "yes"
+      ;;
+    input)
+      # Skip for now
+      ;;
+    log)
+      shift  # Skip --level
+      echo "$@"
+      ;;
+    *)
+      echo "$@"
+      ;;
+  esac
+}
+export -f gum
 
 # Get terminal size from /dev/tty (works in all scenarios: direct, sourced, or piped)
 if [ -e /dev/tty ]; then
@@ -55,5 +102,11 @@ export GUM_CONFIRM_PADDING="$PADDING"
 
 clear_logo() {
   printf "\033[H\033[2J" # Clear screen and move cursor to top-left
-  gum style --foreground 4 --padding "1 0 0 $PADDING_LEFT" "$(<"$LOGO_PATH")" 2>/dev/null || echo "Omadora KDE"
+  if [ -f "$LOGO_PATH" ]; then
+    echo ""
+    cat "$LOGO_PATH"
+    echo ""
+  else
+    echo "Omadora KDE"
+  fi
 }

@@ -19,7 +19,7 @@ show_log_tail() {
         local truncated_line="$line"
       fi
 
-      gum style "$truncated_line"
+      echo "$truncated_line"
     done
 
     echo
@@ -29,7 +29,7 @@ show_log_tail() {
 # Display the failed command or script name
 show_failed_script_or_command() {
   if [[ -n ${CURRENT_SCRIPT:-} ]]; then
-    gum style "Failed script: $CURRENT_SCRIPT"
+    echo "Failed script: $CURRENT_SCRIPT"
   else
     # Truncate long command lines to fit the display
     local cmd="$BASH_COMMAND"
@@ -39,7 +39,7 @@ show_failed_script_or_command() {
       cmd="${cmd:0:$max_cmd_width}..."
     fi
 
-    gum style "$cmd"
+    echo "$cmd"
   fi
 }
 
@@ -74,11 +74,15 @@ catch_errors() {
   clear_logo
   show_cursor
 
-  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omadora KDE installation stopped!"
+  echo ""
+  echo "ERROR: Omadora KDE installation stopped!"
+  echo ""
   show_log_tail
 
-  gum style "This command halted with exit code $exit_code:"
+  echo ""
+  echo "This command halted with exit code $exit_code:"
   show_failed_script_or_command
+  echo ""
 
   # Offer options menu
   while true; do
