@@ -1,0 +1,12 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Source default Omadora bash configuration if it exists
+if [ -f ~/.local/share/omadora-kde/default/bash/rc ]; then
+  source ~/.local/share/omadora-kde/default/bash/rc
+fi
+
+# Add your own exports, aliases, and functions below
+# Example:
+# alias p='python3'
+# export EDITOR=nvim

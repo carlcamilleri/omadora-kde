@@ -1,0 +1,30 @@
+#!/bin/bash
+# Launch web app or focus if already running
+
+APP_NAME="$1"
+shift
+
+LAUNCH_COMMAND="omadora-launch-webapp $@"
+
+# Check if application is running using KDE window management
+if command -v qdbus &>/dev/null; then
+  # Try to find the window by name
+  WINDOWS=$(qdbus org.kde.KWin /KWin org.kde.KWin.getWindowInfo 2>/dev/null | grep -i "$APP_NAME" || true)
+
+  if [ -n "$WINDOWS" ]; then
+    # Window exists, try to activate it
+    wmctrl -a "$APP_NAME" 2>/dev/null || true
+    exit 0
+  fi
+fi
+
+# Fallback: check with wmctrl if available
+if command -v wmctrl &>/dev/null; then
+  if wmctrl -l | grep -qi "$APP_NAME"; then
+    wmctrl -a "$APP_NAME"
+    exit 0
+  fi
+fi
+
+# If not running, launch it
+eval "$LAUNCH_COMMAND"

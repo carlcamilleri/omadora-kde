@@ -1,0 +1,17 @@
+#!/bin/bash
+# Launch application or focus if already running
+
+APP_NAME="$1"
+LAUNCH_CMD="$2"
+
+# Check if application is running using qdbus/wmctrl
+if command -v wmctrl &>/dev/null; then
+  # Try to find and focus the window
+  if wmctrl -l | grep -qi "$APP_NAME"; then
+    wmctrl -a "$APP_NAME"
+    exit 0
+  fi
+fi
+
+# If not running or can't focus, launch it
+eval "$LAUNCH_CMD"

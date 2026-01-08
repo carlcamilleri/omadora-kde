@@ -1,0 +1,19 @@
+#!/bin/bash
+# Launch TUI applications in konsole
+
+APP="$1"
+
+if [ -z "$APP" ]; then
+  echo "Usage: omadora-launch-tui <application>"
+  exit 1
+fi
+
+if command -v konsole &>/dev/null; then
+  konsole -e "$APP"
+elif command -v alacritty &>/dev/null; then
+  alacritty -e "$APP"
+elif command -v kitty &>/dev/null; then
+  kitty -e "$APP"
+else
+  xdg-terminal-exec "$APP"
+fi

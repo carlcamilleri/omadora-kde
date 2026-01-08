@@ -1,0 +1,32 @@
+# Omadora KDE Bash Configuration
+
+# Enable starship prompt if available
+if command -v starship &>/dev/null; then
+  eval "$(starship init bash)"
+fi
+
+# Enable zoxide if available
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init bash)"
+fi
+
+# Aliases
+alias ls='eza --icons' 2>/dev/null || alias ls='ls --color=auto'
+alias ll='eza -l --icons' 2>/dev/null || alias ll='ls -lh'
+alias la='eza -la --icons' 2>/dev/null || alias la='ls -lah'
+alias cat='bat' 2>/dev/null || alias cat='cat'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Environment variables
+export EDITOR=nvim
+export VISUAL=nvim
+export PAGER=less
+
+# History settings
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoredups:erasedups
+
+# Add local bin to PATH
+export PATH="$HOME/.local/bin:$PATH"

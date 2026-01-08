@@ -1,0 +1,156 @@
+# Omadora KDE core package list installed via install/packaging/base.sh
+# This file lists Fedora packages to configure a modern KDE desktop environment
+
+# Development Tools
+git
+gcc
+clang
+llvm
+rust
+cargo
+golang
+make
+cmake
+python3-pip
+python3-devel
+nodejs
+npm
+
+# Terminal & Shell
+alacritty
+kitty
+bash-completion
+starship
+zoxide
+fzf
+ripgrep
+fd-find
+bat
+eza
+dust
+btop
+
+# System Utilities
+util-linux
+coreutils
+findutils
+wget
+curl
+unzip
+p7zip
+p7zip-plugins
+
+# File Management
+nautilus
+dolphin
+gnome-disk-utility
+
+# Development Tools & CLIs
+gh
+lazygit
+neovim
+vim-enhanced
+
+# Container & Virtualization
+docker
+docker-compose
+podman
+podman-compose
+
+# Media
+ffmpeg
+ffmpegthumbnailer
+mpv
+imagemagick
+imv
+
+# Office & Productivity
+libreoffice
+evince
+okular
+
+# Fonts
+google-noto-sans-fonts
+google-noto-serif-fonts
+google-noto-emoji-fonts
+google-noto-color-emoji-fonts
+liberation-fonts
+dejavu-fonts
+fontawesome-fonts
+jetbrains-mono-fonts
+
+# Desktop Environment & Theming
+plasma-desktop
+kde-gtk-config
+breeze-gtk
+breeze-icon-theme
+kvantum
+
+# System Services & Utilities
+NetworkManager
+NetworkManager-wifi
+bluez
+bluez-tools
+cups
+avahi
+firewalld
+ufw
+
+# Audio
+pipewire
+pipewire-alsa
+pipewire-pulseaudio
+wireplumber
+pavucontrol
+alsa-utils
+
+# Graphics & Display
+wayland-protocols
+xorg-x11-server-Xwayland
+mesa-dri-drivers
+mesa-vulkan-drivers
+
+# Archive Tools
+tar
+gzip
+bzip2
+xz
+
+# Network Tools
+openssh
+openssh-clients
+whois
+bind-utils
+traceroute
+nmap
+
+# Power Management
+power-profiles-daemon
+powertop
+
+# Additional KDE Applications
+konsole
+kate
+gwenview
+spectacle
+ark
+kcalc
+kwrite
+
+# System Monitoring
+htop
+iotop
+lsof
+strace
+
+# Clipboard & Screenshots
+xclip
+wl-clipboard
+
+# Misc Utilities
+jq
+yq
+tldr
+tree
+less
+most
