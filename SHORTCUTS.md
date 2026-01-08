@@ -46,6 +46,9 @@ Web apps are installed as .desktop files and can be launched via:
 - `Meta+Space` - KRunner (application launcher)
 - `XF86Calculator` - Calculator
 
+### Task Manager (Taskbar)
+- `Alt+1` through `Alt+9` - Activate taskbar icon 1-9 (quick switch to running apps)
+
 ## Window Management
 
 ### Basic Window Operations

@@ -78,5 +78,10 @@ set_kde_shortcut "kwin" "ShowDesktopGrid" "Meta+G,Ctrl+F8,Show Desktop Grid"
 # Minimize all windows (show desktop)
 set_kde_shortcut "kwin" "Show Desktop" "Meta+D,Meta+D,Peek at Desktop"
 
+# Task Manager Entry shortcuts (Alt+1-9 to activate taskbar icons)
+for i in {1..9}; do
+  set_kde_shortcut "plasmashell" "activate task manager entry $i" "Alt+$i,none,Activate Task Manager Entry $i"
+done
+
 echo "KDE shortcuts configured successfully!"
 echo "Note: You may need to log out and log back in for all shortcuts to take effect."
