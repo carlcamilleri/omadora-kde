@@ -1,0 +1,74 @@
+#!/bin/bash
+# Helper script to detect and fix WM_CLASS for webapps
+
+if [ "$#" -lt 1 ]; then
+  echo "Usage: omadora-webapp-fix-class <webapp-name>"
+  echo "Example: omadora-webapp-fix-class Teams"
+  exit 1
+fi
+
+APP_NAME="$1"
+DESKTOP_FILE="$HOME/.local/share/applications/$APP_NAME.desktop"
+
+if [ ! -f "$DESKTOP_FILE" ]; then
+  echo "Error: Desktop file not found: $DESKTOP_FILE"
+  exit 1
+fi
+
+echo "Step 1: Launch the webapp '$APP_NAME' now (it should already be running)"
+echo "Step 2: Click on the webapp window when the crosshair appears..."
+echo ""
+read -p "Press Enter when the webapp window is open and visible..."
+
+# Get the WM_CLASS of the selected window
+echo ""
+echo "Click on the $APP_NAME window..."
+WM_CLASS_OUTPUT=$(xprop WM_CLASS 2>/dev/null)
+
+if [ $? -ne 0 ]; then
+  echo "Error: Failed to get WM_CLASS. Make sure xprop is installed."
+  exit 1
+fi
+
+# Extract the second class name (the one after the comma)
+# WM_CLASS output looks like: WM_CLASS(STRING) = "instance", "class"
+WM_CLASS=$(echo "$WM_CLASS_OUTPUT" | sed 's/.*= "\([^"]*\)", "\([^"]*\)".*/\2/')
+
+if [ -z "$WM_CLASS" ]; then
+  echo "Error: Could not extract WM_CLASS from: $WM_CLASS_OUTPUT"
+  exit 1
+fi
+
+echo ""
+echo "Detected WM_CLASS: $WM_CLASS"
+echo ""
+
+# Check if StartupWMClass already exists in the desktop file
+if grep -q "^StartupWMClass=" "$DESKTOP_FILE"; then
+  CURRENT_CLASS=$(grep "^StartupWMClass=" "$DESKTOP_FILE" | cut -d'=' -f2)
+  echo "Current StartupWMClass: $CURRENT_CLASS"
+
+  if [ "$CURRENT_CLASS" = "$WM_CLASS" ]; then
+    echo "StartupWMClass is already correct!"
+    exit 0
+  fi
+
+  # Update existing StartupWMClass
+  sed -i "s/^StartupWMClass=.*/StartupWMClass=$WM_CLASS/" "$DESKTOP_FILE"
+  echo "Updated StartupWMClass from '$CURRENT_CLASS' to '$WM_CLASS'"
+else
+  # Add StartupWMClass after Icon line
+  sed -i "/^Icon=/a StartupWMClass=$WM_CLASS" "$DESKTOP_FILE"
+  echo "Added StartupWMClass=$WM_CLASS to desktop file"
+fi
+
+# Update KDE's application cache
+if command -v kbuildsycoca6 &>/dev/null; then
+  kbuildsycoca6 &>/dev/null
+elif command -v kbuildsycoca5 &>/dev/null; then
+  kbuildsycoca5 &>/dev/null
+fi
+
+echo ""
+echo "✓ Desktop file updated successfully!"
+echo "Close and restart the webapp for the icon to update."
