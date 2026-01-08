@@ -47,7 +47,7 @@ gnome-disk-utility
 
 # Development Tools & CLIs
 gh
-lazygit
+# lazygit - not in Fedora repos
 neovim
 vim-enhanced
 
@@ -61,6 +61,7 @@ podman-compose
 ffmpeg
 ffmpegthumbnailer
 mpv
+# ImageMagick - correct package name
 ImageMagick
 imv
 
@@ -75,7 +76,9 @@ google-noto-serif-fonts
 google-noto-emoji-fonts
 google-noto-color-emoji-fonts
 liberation-fonts
-dejavu-fonts
+dejavu-sans-fonts
+dejavu-serif-fonts
+dejavu-sans-mono-fonts
 fontawesome-fonts
 jetbrains-mono-fonts
 
@@ -105,7 +108,7 @@ pavucontrol
 alsa-utils
 
 # Graphics & Display
-wayland-protocols
+wayland-protocols-devel
 xorg-x11-server-Xwayland
 mesa-dri-drivers
 mesa-vulkan-drivers
