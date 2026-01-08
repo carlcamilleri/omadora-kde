@@ -20,13 +20,13 @@ npm
 alacritty
 kitty
 bash-completion
-starship
+# starship - not in Fedora repos, install separately
 zoxide
 fzf
 ripgrep
 fd-find
 bat
-eza
+# eza - not in Fedora repos, will use alias to 'ls --color'
 dust
 btop
 
@@ -61,7 +61,7 @@ podman-compose
 ffmpeg
 ffmpegthumbnailer
 mpv
-imagemagick
+ImageMagick
 imv
 
 # Office & Productivity

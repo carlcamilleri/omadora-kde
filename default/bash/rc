@@ -11,10 +11,19 @@ if command -v zoxide &>/dev/null; then
 fi
 
 # Aliases
-alias ls='eza --icons' 2>/dev/null || alias ls='ls --color=auto'
-alias ll='eza -l --icons' 2>/dev/null || alias ll='ls -lh'
-alias la='eza -la --icons' 2>/dev/null || alias la='ls -lah'
-alias cat='bat' 2>/dev/null || alias cat='cat'
+if command -v eza &>/dev/null; then
+  alias ls='eza --icons'
+  alias ll='eza -l --icons'
+  alias la='eza -la --icons'
+else
+  alias ls='ls --color=auto'
+  alias ll='ls -lh --color=auto'
+  alias la='ls -lah --color=auto'
+fi
+
+if command -v bat &>/dev/null; then
+  alias cat='bat'
+fi
 alias ..='cd ..'
 alias ...='cd ../..'
 
