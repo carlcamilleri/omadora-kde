@@ -84,6 +84,7 @@ jetbrains-mono-fonts
 
 # Desktop Environment & Theming
 plasma-desktop
+kde-cli-tools
 kde-gtk-config
 breeze-gtk
 breeze-icon-theme
