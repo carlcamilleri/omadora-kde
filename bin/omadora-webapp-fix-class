@@ -20,7 +20,17 @@ echo ""
 
 # Detect if we're on Wayland or X11
 if [ -n "$WAYLAND_DISPLAY" ]; then
-  echo "Running on Wayland - using qdbus to detect window class"
+  # Check for qdbus6 (Qt6) or qdbus (Qt5)
+  if command -v qdbus6 &>/dev/null; then
+    QDBUS_CMD="qdbus6"
+  elif command -v qdbus &>/dev/null; then
+    QDBUS_CMD="qdbus"
+  else
+    echo "Error: Neither qdbus6 nor qdbus found. Please install qt6-qttools or qt5-qttools."
+    exit 1
+  fi
+
+  echo "Running on Wayland - using $QDBUS_CMD to detect window class"
   echo ""
   echo "Step 1: Make sure the webapp '$APP_NAME' is open and visible"
   echo "Step 2: The script will search for windows matching the app name"
@@ -28,14 +38,14 @@ if [ -n "$WAYLAND_DISPLAY" ]; then
 
   # Try to find the window using KWin's scripting interface
   # Get list of all windows and their classes
-  WM_CLASS=$(qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -i "$APP_NAME" -A 5 | grep "resourceClass:" | head -1 | cut -d: -f2 | tr -d ' ')
+  WM_CLASS=$($QDBUS_CMD org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -i "$APP_NAME" -A 5 | grep "resourceClass:" | head -1 | cut -d: -f2 | tr -d ' ')
 
   if [ -z "$WM_CLASS" ]; then
     # Fallback: list all windows and let user identify
     echo ""
     echo "Could not auto-detect. Here are all open windows:"
     echo ""
-    qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -E "(caption:|resourceClass:)" | sed 'N;s/\n/ - /'
+    $QDBUS_CMD org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -E "(caption:|resourceClass:)" | sed 'N;s/\n/ - /'
     echo ""
     read -p "Enter the resourceClass value for your webapp: " WM_CLASS
   fi
