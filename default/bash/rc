@@ -39,3 +39,6 @@ export HISTCONTROL=ignoredups:erasedups
 
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+# Add Omadora KDE bin to PATH
+export PATH="$HOME/.local/share/omadora-kde/bin:$PATH"
