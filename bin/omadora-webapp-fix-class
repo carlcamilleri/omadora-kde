@@ -15,24 +15,51 @@ if [ ! -f "$DESKTOP_FILE" ]; then
   exit 1
 fi
 
-echo "Step 1: Launch the webapp '$APP_NAME' now (it should already be running)"
-echo "Step 2: Click on the webapp window when the crosshair appears..."
+echo "Detecting display server..."
 echo ""
-read -p "Press Enter when the webapp window is open and visible..."
 
-# Get the WM_CLASS of the selected window
-echo ""
-echo "Click on the $APP_NAME window..."
-WM_CLASS_OUTPUT=$(xprop WM_CLASS 2>/dev/null)
+# Detect if we're on Wayland or X11
+if [ -n "$WAYLAND_DISPLAY" ]; then
+  echo "Running on Wayland - using qdbus to detect window class"
+  echo ""
+  echo "Step 1: Make sure the webapp '$APP_NAME' is open and visible"
+  echo "Step 2: The script will search for windows matching the app name"
+  read -p "Press Enter when ready..."
 
-if [ $? -ne 0 ]; then
-  echo "Error: Failed to get WM_CLASS. Make sure xprop is installed."
-  exit 1
+  # Try to find the window using KWin's scripting interface
+  # Get list of all windows and their classes
+  WM_CLASS=$(qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -i "$APP_NAME" -A 5 | grep "resourceClass:" | head -1 | cut -d: -f2 | tr -d ' ')
+
+  if [ -z "$WM_CLASS" ]; then
+    # Fallback: list all windows and let user identify
+    echo ""
+    echo "Could not auto-detect. Here are all open windows:"
+    echo ""
+    qdbus org.kde.KWin /KWin org.kde.KWin.queryWindowInfo | grep -E "(caption:|resourceClass:)" | sed 'N;s/\n/ - /'
+    echo ""
+    read -p "Enter the resourceClass value for your webapp: " WM_CLASS
+  fi
+else
+  echo "Running on X11 - using xprop to detect window class"
+  echo ""
+  echo "Step 1: Make sure the webapp '$APP_NAME' is open and visible"
+  echo "Step 2: Click on the webapp window when the crosshair appears"
+  read -p "Press Enter when ready..."
+
+  # Get the WM_CLASS of the selected window
+  echo ""
+  echo "Click on the $APP_NAME window..."
+  WM_CLASS_OUTPUT=$(xprop WM_CLASS 2>/dev/null)
+
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to get WM_CLASS. Make sure xprop is installed."
+    exit 1
+  fi
+
+  # Extract the second class name (the one after the comma)
+  # WM_CLASS output looks like: WM_CLASS(STRING) = "instance", "class"
+  WM_CLASS=$(echo "$WM_CLASS_OUTPUT" | sed 's/.*= "\([^"]*\)", "\([^"]*\)".*/\2/')
 fi
-
-# Extract the second class name (the one after the comma)
-# WM_CLASS output looks like: WM_CLASS(STRING) = "instance", "class"
-WM_CLASS=$(echo "$WM_CLASS_OUTPUT" | sed 's/.*= "\([^"]*\)", "\([^"]*\)".*/\2/')
 
 if [ -z "$WM_CLASS" ]; then
   echo "Error: Could not extract WM_CLASS from: $WM_CLASS_OUTPUT"
