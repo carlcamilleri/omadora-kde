@@ -52,11 +52,14 @@ else
   ICON_PATH="$ICON_DIR/$ICON_REF"
 fi
 
+# Create a safe class name from APP_NAME (alphanumeric only)
+APP_CLASS=$(echo "$APP_NAME" | tr -cd '[:alnum:]')
+
 # Use custom exec if provided, otherwise default behavior
 if [[ -n $CUSTOM_EXEC ]]; then
   EXEC_COMMAND="$CUSTOM_EXEC"
 else
-  EXEC_COMMAND="omadora-launch-webapp $APP_URL"
+  EXEC_COMMAND="omadora-launch-webapp $APP_URL $APP_CLASS"
 fi
 
 # Create application .desktop file
@@ -71,6 +74,7 @@ Exec=$EXEC_COMMAND
 Terminal=false
 Type=Application
 Icon=$ICON_PATH
+StartupWMClass=$APP_CLASS
 StartupNotify=true
 Categories=Network;WebBrowser;
 EOF
