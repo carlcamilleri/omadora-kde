@@ -41,8 +41,12 @@ if [ -n "$desktop_file" ]; then
   # Extract the full Exec line and remove field codes (%u, %U, %f, %F, etc.)
   browser_exec=$(grep -m1 "^Exec=" "$desktop_file" | sed 's/^Exec=//' | sed 's/%[uUfF]$//' | sed 's/ *$//')
 
-  # Launch with --app flag and custom window class for proper icon association
-  exec setsid bash -c "$browser_exec --class=\"$WINDOW_CLASS\" --app=\"$URL\"" &>/dev/null &
+  # Create a dedicated profile directory for this webapp to ensure consistent WM_CLASS
+  PROFILE_DIR="$HOME/.local/share/omadora-kde/webapps/$WINDOW_CLASS"
+  mkdir -p "$PROFILE_DIR"
+
+  # Launch with dedicated profile, app flag, and custom window class for proper icon association
+  exec setsid bash -c "$browser_exec --class=\"$WINDOW_CLASS\" --user-data-dir=\"$PROFILE_DIR\" --app=\"$URL\"" &>/dev/null &
 else
   # Fallback to xdg-open
   exec xdg-open "$URL"
