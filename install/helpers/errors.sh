@@ -84,38 +84,18 @@ catch_errors() {
   show_failed_script_or_command
   echo ""
 
-  # Offer options menu
-  while true; do
-    options=()
+  # Show log location and exit
+  echo ""
+  echo "Installation log saved to: $OMADORA_INSTALL_LOG_FILE"
+  echo ""
+  echo "To view the full log:"
+  echo "  less $OMADORA_INSTALL_LOG_FILE"
+  echo ""
+  echo "To retry installation:"
+  echo "  cd ~/.local/share/omadora-kde && ./install.sh"
+  echo ""
 
-    # If online install, show retry first
-    if [[ -n ${OMADORA_ONLINE_INSTALL:-} ]]; then
-      options+=("Retry installation")
-    fi
-
-    # Add remaining options
-    options+=("View full log")
-    options+=("Exit")
-
-    choice=$(gum choose "${options[@]}" --header "What would you like to do?" --height 6 --padding "1 $PADDING_LEFT")
-
-    case "$choice" in
-    "Retry installation")
-      bash ~/.local/share/omadora-kde/install.sh
-      break
-      ;;
-    "View full log")
-      if command -v less &>/dev/null; then
-        less "$OMADORA_INSTALL_LOG_FILE"
-      else
-        tail "$OMADORA_INSTALL_LOG_FILE"
-      fi
-      ;;
-    "Exit" | "")
-      exit 1
-      ;;
-    esac
-  done
+  exit 1
 }
 
 # Exit handler - ensures cleanup happens on any exit
