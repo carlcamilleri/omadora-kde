@@ -27,11 +27,14 @@ google-chrome* | brave-browser* | microsoft-edge* | opera* | vivaldi* | chromium
 esac
 
 # Find the browser executable from .desktop file
-browser_exec=$(find ~/.local/share/applications ~/.nix-profile/share/applications /usr/share/applications -name "$browser" 2>/dev/null | head -1 | xargs grep -m1 "^Exec=" | sed 's/^Exec=\([^ ]*\).*/\1/')
+desktop_file=$(find ~/.local/share/applications ~/.nix-profile/share/applications /usr/share/applications -name "$browser" 2>/dev/null | head -1)
 
-# If we found the browser, launch it in app mode
-if [ -n "$browser_exec" ]; then
-  exec setsid "$browser_exec" --app="$1" "${@:2}" &>/dev/null &
+if [ -n "$desktop_file" ]; then
+  # Extract the full Exec line and remove field codes (%u, %U, %f, %F, etc.)
+  browser_exec=$(grep -m1 "^Exec=" "$desktop_file" | sed 's/^Exec=//' | sed 's/%[uUfF]$//' | sed 's/ *$//')
+
+  # Launch with --app flag inserted before any remaining arguments
+  exec setsid bash -c "$browser_exec --app=\"$1\" ${*:2}" &>/dev/null &
 else
   # Fallback to xdg-open
   exec xdg-open "$1"
