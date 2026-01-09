@@ -10,11 +10,15 @@ set_kde_shortcut() {
   kwriteconfig5 --file kglobalshortcutsrc --group "$group" --key "$key" "$value"
 }
 
-# Workspace switching shortcuts (Meta+1-9 for workspaces 1-9)
+# Workspace switching shortcuts (Meta+1-9 for workspaces 1-9, Meta+0 for workspace 10)
 for i in {1..9}; do
   set_kde_shortcut "kwin" "Switch to Desktop $i" "Meta+$i,none,Switch to Desktop $i"
   set_kde_shortcut "kwin" "Window to Desktop $i" "Meta+Shift+$i,none,Window to Desktop $i"
 done
+
+# Desktop 10 shortcuts (Meta+0)
+set_kde_shortcut "kwin" "Switch to Desktop 10" "Meta+0,none,Switch to Desktop 10"
+set_kde_shortcut "kwin" "Window to Desktop 10" "Meta+Shift+0,none,Window to Desktop 10"
 
 # Workspace navigation
 set_kde_shortcut "kwin" "Switch to Next Desktop" "Meta+Tab,none,Switch to Next Desktop"
